@@ -4,6 +4,10 @@
 Zumo32U4Motors motors;
 Zumo32U4ButtonA buttonA;
 
+#define CONSTANT_SPEED  100;
+#define CIRCLE_DELAY    2000;
+#define SPIN_DELAY      500;
+
 void setup()
 {
   // Uncomment if necessary to correct motor directions:
@@ -20,19 +24,16 @@ void setup()
 
 void loop()
 {
-  int constant_speed = 100;
   /** TASK I **/
-  int circle_delay = 2000;
-  motors.setSpeeds(constant_speed, 0);
-  delay(circle_delay);  // Modify this delay so the robot makes a complete circle
+  motors.setSpeeds(CONSTANT_SPEED, 0);
+  delay(CIRCLE_DELAY);  // Modify this delay so the robot makes a complete circle
   motors.setSpeeds(0, 0);
-  delay(50);
+  delay(5000);
 
   /** TASK II **/
-  int spin_delay = 500;
-  motors.setSpeeds(constant_speed, -constant_speed);
-  delay(spin_delay);
-  motors.setSpeeds(-constant_speed, constant_speed);
-  delay(spin_delay);
-  delay(50);
+  motors.setSpeeds(CONSTANT_SPEED, -CONSTANT_SPEED);
+  delay(SPIN_DELAY);
+  motors.setSpeeds(-CONSTANT_SPEED, CONSTANT_SPEED);
+  delay(SPIN_DELAY);
+  delay(5000);
 }
