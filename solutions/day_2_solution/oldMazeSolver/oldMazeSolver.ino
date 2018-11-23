@@ -4,7 +4,6 @@
 Pushbutton buttonA(ZUMO_BUTTON);
 ZumoMotors motors;
 ZumoReflectanceSensorArray lineSensors;
-ZumoBuzzer buzzer;
 
 /*--------------- CONSTANTS FOR OPERATION ---------------*/
 // Motor speed when turning during line sensor calibration
