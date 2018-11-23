@@ -4,61 +4,64 @@
 Pushbutton buttonA(ZUMO_BUTTON);
 ZumoMotors motors;
 ZumoReflectanceSensorArray lineSensors;
+ZumoBuzzer buzzer;
 
 /*--------------- CONSTANTS FOR OPERATION ---------------*/
 // Motor speed when turning during line sensor calibration
-const uint16_t calibrationSpeed = 200;
+const uint16_t calibrationSpeed = 150;
 
 // This line sensor threshold is used to dsetect intersections
-const uint16_t sensorThreshold = 200;
+const uint16_t sensorThreshold = 300;
 
 // Delay to get the robot to the center of the intersection
-const uint16_t intersectionDelay = 500;
+const uint16_t intersectionDelay = 50;
 
 // The normal operating speed of the robot.
-const uint16_t forwardSpeed = 200;
+const uint16_t forwardSpeed = 300;
 
 // Holds the values of the 5 line sensors.
-uint16_t lineSensorValues[5];
+uint16_t lineSensorValues[6];
 /*--------------- CONSTANTS FOR OPERATION ---------------*/
 
 bool foundLeft, foundStraight, foundRight;
+int turndelay = 120;
+int sensorThresholdDark = 600;
+int lastError = 0;
 
 void setup()
 {
+  lineSensors.init();
+  
+  buttonA.waitForButton();  // Wait for the button to be pressed
+  
   calibrateSensors();     // Calibrate the sensors
 
-  buttonA.waitForButton();  // Wait for the button to be pressed
+  // Wait for the user button to be pressed and released
+  buttonA.waitForButton();
+
 }
 
 void loop()
 {
-  updateMotorSpeeds();  // TASK 1: FILL IN THIS FUNCTION
+    updateMotorSpeeds();  // TASK 1: FILL IN THIS FUNCTION
   
     if(deadEnd() || intersection()) // TASK 2a: FILL IN THESE FUNCTIONS
     {
       driveToIntersectionCenter(&foundLeft, &foundStraight, &foundRight); // TASK 2b: FILL IN THIS FUNCTION
+      
+      // Choose a direction to turn.
+      if(aboveDarkSpot())
+      {
+        // Found end of the end of the maze
+        motors.setSpeeds(0, 0);
+        delay(60000);
+       }
+      
+      char dir = selectTurn(foundLeft, foundStraight, foundRight);
+
+      // Make the turn.
+      turn(dir);
     }
-
-  /*
-  // TASK 2c: FILL IN THESE FUNCTIONS
-  if (detectedObject()) 
-  {
-    moveAroundObject();
-  }
-  */
-
-  if(aboveDarkSpot())
-    {
-      // Found end of the end of the maze
-      motors.setSpeeds(0, 0);
-    }
-  
-    // Choose a direction to turn.
-    char dir = selectTurn(foundLeft, foundStraight, foundRight);
-
-    // Make the turn.
-    turn(dir);
 }
 
 /*------------------------------------ START FUNCTIONS TO FILL IN ------------------------------------*/
@@ -66,24 +69,45 @@ void loop()
 /* TASK 1: LINE FOLLOWING - FILL IN THIS FUNCTION */
 void updateMotorSpeeds()
 {
-  // 1. Get the position of the line by reading from the line sensors. Use data type uint16_t for your variable.
+  // Get the position of the line.  Note that we *must* provide the "sensors"
+  // argument to readLine() here, even though we are not interested in the
+  // individual sensor readings
+  int position = lineSensors.readLine(lineSensorValues);
 
-    // 2. Create a new variable called 'error' to figure out how far we are away from the centre of the line, based on the previous reading. The centre of the line corresponds to position 2000. Use the data type int16_t for your variable.
-  //HINT: you might like to use the serial monitor to find out what readings you are getting from the line sensor, to figure out what your error variable should be.
+  // Our "error" is how far we are away from the center of the line, which
+  // corresponds to position 2500.
+  int error = position - 2500;
 
-  // 3. Create a new variable called errorChange. This variable will store the difference between the current error, and the last error. For now, you can call the last error variable 'lastError', as we will be defining it later. 
+  // Get motor speed difference using proportional and derivative PID terms
+  // (the integral term is generally not very useful for line following).
+  // Here we are using a proportional constant of 1/4 and a derivative
+  // constant of 6, which should work decently for many Zumo motor choices.
+  // You probably want to use trial and error to tune these constants for
+  // your particular Zumo and line course.
+  int speedDifference = error / 4 + 6 * (error - lastError);
 
-    // 4. Scale your error by multiplying it by a number between 0 and 1. This will determine how much your robot reacts to the error. You might like to play around with different values. 
-  // Now, Add your scaled error to the change in error variable you created in 3. You will also need to scale errorChange, by multiplying it by number between 1 and 10.
-  // You can call this new error variable speedDifference, with type int16_t
+  lastError = error;
 
-    // 5. Calculate the left and right motor speeds INDIVIDUALLY, using your speedDifference variable. You will need to add or subtract this variable to the robot's max speed. Whether you add or subtract depends on which motor and is up to you to figure it out. The serial monitor can help here. Both variables should be of type int16_t
+  // Get individual motor speeds.  The sign of speedDifference
+  // determines if the robot turns left or right.
+  int m1Speed = forwardSpeed + speedDifference;
+  int m2Speed = forwardSpeed - speedDifference;
 
-    // 6. Since we don't want the robot to go over the max speed limit, use the in-built arduino 'constrain()' function to constrain the new left and right speeds between 0 and the max speed. 
-  // The function takes 3 arguments: the variable you want to constrain, the lower bound to constrain and finally the upper bound to constrain.
-  // You may reassign these constrained speeds to the old left and right speeds, or create new ones.
-  
-  // 7. Set the speed of the motor using your newly calculated left and right speeds!
+  // Here we constrain our motor speeds to be between 0 and forwardSpeed.
+  // Generally speaking, one motor will always be turning at forwardSpeed
+  // and the other will be at forwardSpeed-|speedDifference| if that is positive,
+  // else it will be stationary.  For some applications, you might want to
+  // allow the motor speed to go negative so that it can spin in reverse.
+  if (m1Speed < 0)
+    m1Speed = 0;
+  if (m2Speed < 0)
+    m2Speed = 0;
+  if (m1Speed > forwardSpeed)
+    m1Speed = forwardSpeed;
+  if (m2Speed > forwardSpeed)
+    m2Speed = forwardSpeed;
+
+  motors.setSpeeds(m1Speed, m2Speed);
 }
 
 
@@ -97,8 +121,6 @@ bool lineExists(uint8_t sensorIndex)
 // Use the lineExists function to test the various line sensors to see if there is a dead end in front of the robot 
 bool deadEnd()
 {
-  /* TO DO */
-  
   return (!lineExists(0) && !lineExists(1) && !lineExists(2) && !lineExists(3) && !lineExists(4));
 }
 
@@ -106,9 +128,7 @@ bool deadEnd()
 // Use the lineExists function to test the various line sensors to see if there is an intersection in front of the robot
 bool intersection()
 { 
-  /* TO DO */
-  
-  return (lineExists(0) || lineExists(4));
+  return (lineExists(0) || lineExists(5));
 }
 
 /* TASK 2b: DRIVE TO CENTER OF INTERSECTION - FILL IN THIS FUCTION */
@@ -141,7 +161,7 @@ void driveToIntersectionCenter(bool * foundLeft, bool * foundStraight, bool * fo
   lineSensors.readLine(lineSensorValues); // Read the values again, just to be sure
 
   // 4. Using the lineExists function, test to see if any of the middle 3 Sensors detects a line
-  if(aboveLine(1) || aboveLine(2) || aboveLine(3))
+  if(lineExists(1) || lineExists(2) || lineExists(3))
   {
     *foundStraight = 1;
   }
@@ -161,21 +181,21 @@ void calibrateSensors()
   // Wait 1 second and then begin automatic sensor calibration
   // by rotating in place to sweep the sensors over the line
   delay(1000);
-  for(uint16_t i = 0; i < 120; i++)
+  int i;
+  for(i = 0; i < 80; i++)
   {
-    if (i > 30 && i <= 90)
-    {
+    if ((i > 10 && i <= 30) || (i > 50 && i <= 70))
       motors.setSpeeds(-200, 200);
-    }
     else
-    {
       motors.setSpeeds(200, -200);
-    }
-
     lineSensors.calibrate();
+
+    // Since our counter runs to 80, the total delay will be
+    // 80*20 = 1600 ms.
+    delay(20);
   }
-  
-  motors.setSpeeds(0, 0);
+  motors.setSpeeds(0,0);
+
 }
 
 // This function decides which way to turn.
@@ -190,72 +210,69 @@ char selectTurn(bool foundLeft, bool foundStraight, bool foundRight)
   else if(foundRight) { return 'R'; }
   else { return 'B'; }
 }
-
-// Turns according to the parameter dir, which should be 'L'
-// (left), 'R' (right), 'S' (straight), or 'B' (back).  We turn
-// most of the way using the gyro, and then use one of the line
-// sensors to finish the turn.  We use the inner line sensor that
-// is closer to the target line in order to reduce overshoot.
+// Turns according to the parameter dir, which should be
+// 'L' (left), 'R' (right), 'S' (straight), or 'B' (back).
 void turn(char dir)
 {
-  if (dir == 'S')
-  {
-    // Don't do anything!
-    return;
-  }
 
-  turnSensorReset();
+  // count and last_status help
+  // keep track of how much further
+  // the Zumo needs to turn.
+  unsigned short count = 0;
+  unsigned short last_status = 0;
+  unsigned int sensors[6];
 
-  uint8_t sensorIndex;
-
+  // dir tests for which direction to turn
   switch(dir)
   {
+
+  // Since we're using the sensors to coordinate turns instead of timing them,
+  // we can treat a left turn the same as a direction reversal: they differ only
+  // in whether the zumo will turn 90 degrees or 180 degrees before seeing the
+  // line under the sensor. If 'B' is passed to the turn function when there is a
+  // left turn available, then the Zumo will turn onto the left segment.
+    case 'L':
   case 'B':
-    // Turn left 125 degrees using the gyro.
-    motors.setSpeeds(-turnSpeed, turnSpeed);
-    while((int32_t)turnAngle < turnAngle45 * 3)
-    {
-      turnSensorUpdate();
-    }
-    sensorIndex = 1;
+      // Turn left.
+      motors.setSpeeds(-forwardSpeed, forwardSpeed);
+
+      // This while loop monitors line position
+      // until the turn is complete.
+      while(count < 2)
+      {
+        lineSensors.readLine(sensors);
+
+        // Increment count whenever the state of the sensor changes
+    // (white->black and black->white) since the sensor should
+    // pass over 1 line while the robot is turning, the final
+    // count should be 2
+        count += lineExists(sensors[1]) ^ last_status;
+        last_status = lineExists(sensors[1]);
+      }
+
     break;
 
-  case 'L':
-    // Turn left 45 degrees using the gyro.
-    motors.setSpeeds(-turnSpeed, turnSpeed);
-    while((int32_t)turnAngle < turnAngle45)
-    {
-      turnSensorUpdate();
-    }
-    sensorIndex = 1;
+    case 'R':
+      // Turn right.
+      motors.setSpeeds(forwardSpeed, -forwardSpeed);
+
+      // This while loop monitors line position
+      // until the turn is complete.
+      while(count < 2)
+      {
+        lineSensors.readLine(sensors);
+        count += lineExists(sensors[4]) ^ last_status;
+        last_status = lineExists(sensors[4]);
+      }
+
     break;
 
-  case 'R':
-    // Turn right 45 degrees using the gyro.
-    motors.setSpeeds(turnSpeed, -turnSpeed);
-    while((int32_t)turnAngle > -turnAngle45)
-    {
-      turnSensorUpdate();
-    }
-    sensorIndex = 3;
+    case 'S':
+    // Don't do anything!
     break;
-
-  default:
-    // This should not happen.
-    return;
-  }
-
-  // Turn the rest of the way using the line sensors.
-  while(1)
-  {
-    readSensors();
-    if (lineExists(sensorIndex))
-    {
-      // We found the line again, so the turn is done.
-      break;
-    }
   }
 }
+
 
 bool aboveDarkSpot()
 {

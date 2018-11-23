@@ -48,8 +48,7 @@ void loop()
 
 	if(aboveDarkSpot())
     {
-      // Found end of the end of the maze
-      break;
+      // check if there is an object, if there is, finish and alert, if not, continue searching through maze
     }
 	
     // Choose a direction to turn.
