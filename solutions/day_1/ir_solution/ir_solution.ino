@@ -9,21 +9,38 @@ Zumo32U4ProximitySensors proxSensors;
 #define MIN_DISTANCE  1000; 
 #define TURN_TIME     100;
 
+int front_left = 0;
+int front_right = 0;
+
 void setup()
 {
   proxSensors.initFrontSensor();
-  int front_left = 0;
-  int front_right = 0;
 }
 
 void loop() 
 {
+  proxSensors.read();
+  front_left = proxSensors.countsFrontWithLeftLeds();
+  front_right = proxSensors.countsFrontWithRightLeds();
+  
   /* TASK I */
   if (front_left < MIN_DISTANCE || front_right < MIN_DISTANCE)
   {
-    motors.setSpeeds(0, 0);
+    motors.setSpeeds(SPEED, SPEED);
+  {
+  else
+  {
+    /* TASK I */
+    //motors.setSpeeds(0, 0);
     /* TASK II */
-    motors.setSpeeds(SPEED, -SPEED);  // Turn clockwise on the spot
+    move_around_object();
+  }
+
+}
+
+void move_around_object()
+{
+   motors.setSpeeds(SPEED, -SPEED);  // Turn clockwise on the spot
     delay(TURN_TIME);
     motors.setSpeeds(0, 0); // Stop
     delay(50);
@@ -51,14 +68,6 @@ void loop()
     delay(TURN_TIME);
     motors.setSpeeds(0, 0); // Stop
     delay(50);
-    motors.setSpeeds(SPEED, SPEED);  Continue
-  }
-  else
-  {
-    motors.setSpeeds(SPEED, SPEED);
-  }
-  
-  proxSensors.read();
-  int front_left = proxSensors.countsFrontWithLeftLeds();
-  int front_right = proxSensors.countsFrontWithRightLeds();
+    motors.setSpeeds(SPEED, SPEED);  // Continue moving
+}
 }

@@ -4,6 +4,10 @@
 Zumo32U4Motors motors;
 Zumo32U4ButtonA buttonA;
 
+#define SPEED_LIMIT 100
+
+int current_speed;
+
 void setup()
 {
   // Uncomment if necessary to correct motor directions:
@@ -21,26 +25,22 @@ void setup()
 void loop() 
 {
   /** TASK I **/
-  int constant_speed = 200;
-  motors.setSpeeds(constant_speed, constant_speed);
+  motors.setSpeeds(SPEED_LIMIT, SPEED_LIMIT);
 
   /** TASK II-IV **/
-  int speed;
-  for (speed = 0; speed <= 400; speed++)
+  for (current_speed = 0; current_speed <= 400; current_speed++)
   {
-    ledGreen(1);
-    ledRed(0);
-    motors.setSpeeds(speed, speed);
+    motors.setSpeeds(current_speed, current_speed);
     delay(2);
+    ledGreen(1);
   }
 
   delay(2000); // Hold this speed for 2 seconds before decelerating backwards
 
-  for (speed = -400; speed <= 0; speed++)
+  for (current_speed = -400; current_speed <= 0; current_speed++)
   {
-    ledGreen(0);
-    ledRed(1);
-    motors.setSpeeds(speed, speed);
+    motors.setSpeeds(current_speed, current_speed);
     delay(2);
+    ledGreen(0);
   }
 }

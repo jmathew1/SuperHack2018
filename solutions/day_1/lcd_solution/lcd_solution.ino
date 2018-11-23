@@ -5,6 +5,10 @@ Zumo32U4Motors motors;
 Zumo32U4ButtonA buttonA;
 Zumo32U4LCD lcd;
 
+#define SPEED_LIMIT 100
+
+int current_speed;
+
 void setup()
 {
   // Uncomment if necessary to correct motor directions:
@@ -21,41 +25,25 @@ void setup()
 
 void loop() 
 {
-  // Clear the screen
-  lcd.clear();
-
   /** TASK II-IV **/
-  int speed;
-  for (speed = 0; speed <= 400; speed++)
+  for (current_speed = 0; current_speed <= 400; current_speed++)
   {
-    lcd.print(speed);
+    motors.setSpeeds(current_speed, current_speed);
+    //delay(2);
     ledGreen(1);
     ledRed(0);
-    motors.setSpeeds(speed, speed);
-    delay(2);
+    // Clear the screen then print the speed
+    lcd.clear();
+    lcd.print(current_speed);
   }
 
   delay(2000); // Hold this speed for 2 seconds before decelerating backwards
 
-  for (speed = -400; speed <= 0; speed++)
+  for (current_speed = -400; current_speed <= 0; current_speed++)
   {
-    lcd.print(speed);
+    motors.setSpeeds(current_speed, current_speed);
+    //delay(2);
     ledGreen(0);
     ledRed(1);
-    motors.setSpeeds(speed, speed);
-    delay(2);
   }
-
-
-
-  // Print a string
-  lcd.print("hi");
-
-  // Go to the next line
-  lcd.gotoXY(0, 1);
-
-  // Print a number
-  lcd.print(1234);
-
-  delay(1000);
 }
