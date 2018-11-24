@@ -50,5 +50,7 @@ For this part, download and write your code in the the provided skeleton code in
 
 Task 0: Decide on a normal operating speed of the robot and fill in the variable. You may need to play around with this value.
 Task 1: Fill in the updateMotorSpeeds() function
+
+#### Time Permitting
 Task 2a: Fill in the deadEnd() and intersection() functions
 Task 2b: Fill in the driveToIntersectionCenter function
