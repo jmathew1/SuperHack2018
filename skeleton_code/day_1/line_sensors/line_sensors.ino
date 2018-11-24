@@ -8,6 +8,8 @@ ZumoReflectanceSensorArray lineSensors;
 void setup() 
 {
   // Initialize here
+
+  // Begin serial monitor
   
   // Wait for the user to press button A.
   buttonA.waitForButton();
