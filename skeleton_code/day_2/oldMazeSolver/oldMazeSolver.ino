@@ -28,7 +28,7 @@ int sensorThresholdDark = 600;
 int lastError = 0;
 
 // Delay to get the robot to the center of the intersection (millisec)
-int intersectionDelay = /* TO DO */;
+int intersectionDelay = /* TO DO - SEE TASK 2b */;
 
 // The normal operating speed of the robot (0 to 400)
 int forwardSpeed = /* TO DO */;
@@ -128,7 +128,7 @@ void driveToIntersectionCenter(bool * foundLeft, bool * foundStraight, bool * fo
 	motors.setSpeeds(straightSpeed, straightSpeed);
 	
 	// 1. Modify the value of intersectionDelay at the start of this program so the robot reaches the center of the intersection when it sees one
-	// HINT: you may like to add a delay() BEFORE this function is called in the main loop to make it more clear how far the robot moves when it detects an intersection
+	// HINT: you may like to add a delay() (or play a sound!) BEFORE this function is called in the main loop to make it more clear how far the robot moves when it detects an intersection
 	delay(intersectionDelay);	
 	
     lineSensors.readLine(lineSensorValues);	// Read the values of the line sensors
