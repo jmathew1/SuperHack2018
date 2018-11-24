@@ -50,12 +50,16 @@ Normally, the line sensors are calibrated properly before being used, rather tha
 For this part, download and write your code in the the provided skeleton code in this repository under skeleton_code > day_2 > oldMazeSolver. 
 
 **Please read through each part carefully for details**
+
 Task 0: Robot operating speed
+
 Decide on a normal operating speed of the robot and fill in the variable at the start of the code. You may need to play around with this value.
 Also read through the setup() and loop() functions. You do not have to look through the function descriptions (yet), but make sure you understand the general idea of what is happening every loop iteration.
 
 Task 1: Fill in the updateMotorSpeeds() function
+
 You will find this below the main loop() function, and has guided steps for what you need to do. **If you wish to test this part in isolation before you move on, you can comment out the rest of the code in loop(), or copy your code (AND THE CALIBRATION IN SETUP, PLUS THE CALIBRATION FUNCTION) to another arduino file**
 
 Task 2a: Fill in the deadEnd() and intersection() functions
+
 Using the function below updateMotorSpeeds(), figure out what values to check and return for these two functions. You might like to think back to the line sensors example for this part if you're stuck. 
