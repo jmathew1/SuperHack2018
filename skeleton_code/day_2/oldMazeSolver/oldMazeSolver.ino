@@ -1,9 +1,11 @@
 #include <Wire.h>
 #include <ZumoShield.h>
 
+
 Pushbutton buttonA(ZUMO_BUTTON);
 ZumoMotors motors;
 ZumoReflectanceSensorArray lineSensors;
+
 
 /*--------------- CONSTANTS FOR OPERATION ---------------*/
 // Threshold to detect intersections
@@ -16,7 +18,7 @@ int inches_to_zunits = 17142.0;
 // Holds the values of the 6 line sensors.
 int lineSensorValues[6];
 
-// Control variable
+// Control variable for Task 1
 int lastError = 0;
 
 // For Task 2a: helps the robot pick a direction to turn
@@ -25,6 +27,8 @@ bool foundLeft, foundStraight, foundRight;
 // The normal operating speed of the robot, from 0 to 400
 int forwardSpeed = /* TO DO */
 /*--------------- CONSTANTS FOR OPERATION ---------------*/
+
+
 void setup()
 {
 	lineSensors.init();			// Initialize the sensors
@@ -32,18 +36,21 @@ void setup()
 	
 	buttonA.waitForButton();	// Wait for the button to be pressed
 	
-	calibrateSensors();			// Calibrate the sensors
+	calibrateSensors();			// Calibrate the sensors, then start driving
 }
 
 void loop()
 {
+	// First, update the motor speeds so it stays on the centre 
 	updateMotorSpeeds();	// TASK 1: FILL IN THIS FUNCTION
 	
+	// Check as we are driving to see if there are any dead ends or places to turn
     if(deadEnd() || intersection()) // TASK 2a: FILL IN THESE FUNCTIONS
     {
-		driveToIntersectionCenter(&foundLeft, &foundStraight, &foundRight);	// TASK 2b: FILL IN THIS FUNCTION
+		// Found one, move forward a little to get into the center of the intersection/dead end and check again
+		driveToIntersectionCenter(&foundLeft, &foundStraight, &foundRight);	
 		
-		// Choose a direction to turn.
+		// Choose a direction to turn, based on which exits are available
 		char dir = selectTurn(foundLeft, foundStraight, foundRight);
 
 		// Make the turn.
@@ -62,10 +69,17 @@ void updateMotorSpeeds()
 
 	// 3. Create a new variable called errorChange. This variable will store the difference between the current error and the last error. For now, you can call the last error variable 'lastError', as we will be defining it later. 
 
-    // 4. Create a new variable called speedDifference. The value of speedDifference will be 'error', multiplyed by a number between 0 and 1, added to the change in error variable 'errorChange', but scaled by a number between 1 and 10.
+    // 4a. Create a new variable called speedDifference. The value of speedDifference will be 'error', multiplyed by a number between 0 and 1, added to the change in error variable 'errorChange', but scaled by a number between 1 and 10.
 	// This will determine how much your robot reacts to the error. You might like to play around with different values. 
+	
+    // 4b. Set lastError = error
 
-    // 5. Calculate the left and right motor speeds INDIVIDUALLY, using your new speedDifference variable. You will need to add or subtract this variable to the robot's normal forward speed (defined at the start of the program). Whether you add or subtract depends on which motor and is up to you to figure it out. The serial monitor can help here. 
+    // 5. Calculate the values for the left and right motor speeds, using your new speedDifference variable. 
+	// You will need to add or subtract speedDifference to the robot's normal forward speed (defined at the start of the program).
+	// HINT: Whether you add or subtract depends the motor, and how you defined your 'error' variable. It is up to you to figure it out. 
+	// Try drawing a diagram of the robot in two scenarios: left of the centre of the line, and right of the centre. 
+	// Would you get a positive or negative reading for speedDifference? If you're left of the line, which motor do you want to move forwards and which one do you want to move backwards?
+	// This should help you figure out whether to add or subtract for each motor
 
     // 6. Since we don't want the robot to go over the normal forward speed, use the in-built arduino 'constrain(1, 2, 3)' function to constrain the new left and right speeds between 0 and the forward speed.
 	// The function takes 3 arguments: the variable you want to constrain, the lower bound to constrain and finally the upper bound to constrain.
@@ -87,7 +101,7 @@ bool deadEnd()
 {
 	/* TO DO */
 	
-	return /* TO DO */
+	//return /* TO DO */
 }
 
 /* TASK 2a: INTERSECTION TEST - FILL IN THIS FUNCTION */
@@ -97,7 +111,7 @@ bool intersection()
 {	
 	/* TO DO */
 	
-	return /* TO DO */
+	//return /* TO DO */
 }
 /*------------------------------------ END FUNCTIONS TO FILL IN ------------------------------------*/
 
@@ -134,7 +148,6 @@ void calibrateSensors()
 // This function decides which way to turn.
 char selectTurn(bool foundLeft, bool foundStraight, bool foundRight)
 {
-  /* POSSIBLY REMOVE: REMOVE CODE THAT GIVES LEFT HAND RULE */
   // Make a decision about how to turn.  The following code
   // implements a left-hand-on-the-wall strategy, where we always
   // turn as far to the left as possible.
