@@ -41,7 +41,7 @@ void setup()
 
 void loop()
 {
-	// First, update the motor speeds so it stays on the centre 
+	// First, update the motor speeds so it stays on the centre of the black line
 	updateMotorSpeeds();	// TASK 1: FILL IN THIS FUNCTION
 	
 	// Check as we are driving to see if there are any dead ends or places to turn
