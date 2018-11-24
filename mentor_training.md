@@ -12,7 +12,7 @@ The **zumo library reference** can be found at https://pololu.github.io/zumo-shi
 For each part, download and write your code in the the provided skeleton code in this repository under skeleton_code > day_1.
 
 ### Push Button and LED
-1. Wait for the button to be pressed, then blink the LED repetedly. You may like to use the waitForButton() method in your Pushbutton object
+1. Wait for the button to be pressed, then blink the LED repetedly. You may like to use the waitForButton() method in your Pushbutton object.
 Note for this part you will need to use the pinMode and digitalWrite functions for the LED to turn it off and on, with the LED pin being 13. 
 
 ### Motor Control
