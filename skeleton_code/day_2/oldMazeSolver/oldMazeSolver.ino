@@ -6,38 +6,29 @@ ZumoMotors motors;
 ZumoReflectanceSensorArray lineSensors;
 
 /*--------------- CONSTANTS FOR OPERATION ---------------*/
-// Motor speed when turning during line sensor calibration
-int calibrationSpeed = 150;
-
-// This line sensor threshold is used to dsetect intersections
+// Threshold to detect intersections
 int sensorThreshold = 300;
 
-// Delay when robot turns at an intersection
-int turndelay = 120;
+// Thickness of the line in inchese
+int lineThickness = 0.70;
+int inches_to_zunits = 17142.0;
 
 // Holds the values of the 6 line sensors.
 int lineSensorValues[6];
 
-// Variables to detect intersection paths
-bool foundLeft, foundStraight, foundRight;
-
-// Used to detect dark zones
-int sensorThresholdDark = 600;
-
-// For Task 1
+// Control variable
 int lastError = 0;
 
-// Delay to get the robot to the center of the intersection (millisec)
-int intersectionDelay = /* TO DO - SEE TASK 2b */;
+// For Task 2a: helps the robot pick a direction to turn
+bool foundLeft, foundStraight, foundRight;
 
-// The normal operating speed of the robot (0 to 400)
-int forwardSpeed = /* TO DO */;
+// The normal operating speed of the robot, from 0 to 400
+int forwardSpeed = /* TO DO */
 /*--------------- CONSTANTS FOR OPERATION ---------------*/
-
-
 void setup()
 {
 	lineSensors.init();			// Initialize the sensors
+	delay(500);
 	
 	buttonA.waitForButton();	// Wait for the button to be pressed
 	
@@ -52,14 +43,6 @@ void loop()
     {
 		driveToIntersectionCenter(&foundLeft, &foundStraight, &foundRight);	// TASK 2b: FILL IN THIS FUNCTION
 		
-		if(aboveDarkSpot())
-		{
-		  // Found end of the end of the maze
-		  motors.setSpeeds(0, 0);
-		  delay(10000);
-		}
-		
-		
 		// Choose a direction to turn.
 		char dir = selectTurn(foundLeft, foundStraight, foundRight);
 
@@ -73,16 +56,16 @@ void loop()
 /* TASK 1: LINE FOLLOWING - FILL IN THIS FUNCTION */
 void updateMotorSpeeds()
 {
-	// 1. Get the position of the line by reading from the line sensors.
+	// 1. Get the position of the line by reading from the line sensors, like in the examples.
 
-    // 2. Create a new variable called 'error' to figure out how far we are away from the centre of the line, based on the previous reading. Note that the centre of the line corresponds to position 2000. 
+    // 2. Create a new variable called 'error' to figure out how far we are away from the centre of the line, based on the previous reading. If you have forgotten what position the centre of the line is, you might like to refer back to Part 1.
 
 	// 3. Create a new variable called errorChange. This variable will store the difference between the current error and the last error. For now, you can call the last error variable 'lastError', as we will be defining it later. 
 
-    // 4. Create a new variable called speedDifference. The value of speedDifference will be your error variable, multiplyed by a number between 0 and 1, added to the change in error variable you created in 3., but scaled by a number between 1 and 10.
+    // 4. Create a new variable called speedDifference. The value of speedDifference will be 'error', multiplyed by a number between 0 and 1, added to the change in error variable 'errorChange', but scaled by a number between 1 and 10.
 	// This will determine how much your robot reacts to the error. You might like to play around with different values. 
 
-    // 5. Calculate the left and right motor speeds INDIVIDUALLY, using your speedDifference variable. You will need to add or subtract this variable to the robot's normal forward speed (defined at the start of the program). Whether you add or subtract depends on which motor and is up to you to figure it out. The serial monitor can help here. 
+    // 5. Calculate the left and right motor speeds INDIVIDUALLY, using your new speedDifference variable. You will need to add or subtract this variable to the robot's normal forward speed (defined at the start of the program). Whether you add or subtract depends on which motor and is up to you to figure it out. The serial monitor can help here. 
 
     // 6. Since we don't want the robot to go over the normal forward speed, use the in-built arduino 'constrain(1, 2, 3)' function to constrain the new left and right speeds between 0 and the forward speed.
 	// The function takes 3 arguments: the variable you want to constrain, the lower bound to constrain and finally the upper bound to constrain.
@@ -115,46 +98,6 @@ bool intersection()
 	/* TO DO */
 	
 	return /* TO DO */
-}
-
-/* TASK 2b: DRIVE TO CENTER OF INTERSECTION - FILL IN THIS FUCTION */
-// Drive straight forward to get to the center of the intersection, then check for possible exits
-void driveToIntersectionCenter(bool * foundLeft, bool * foundStraight, bool * foundRight)
-{
-	*foundLeft = 0;
-	*foundStraight = 0;
-	*foundRight = 0;
-
-	motors.setSpeeds(straightSpeed, straightSpeed);
-	
-	// 1. Modify the value of intersectionDelay at the start of this program so the robot reaches the center of the intersection when it sees one
-	// HINT: you may like to add a delay() (or play a sound!) BEFORE this function is called in the main loop to make it more clear how far the robot moves when it detects an intersection
-	delay(intersectionDelay);	
-	
-    lineSensors.readLine(lineSensorValues);	// Read the values of the line sensors
-	
-	// 2. Using the lineExists function above, test to see if the first (leftmost) lineSensor detects a line
-	// HINT: This part is very similar to 2a
-    if(/* TO DO */)
-    {
-      *foundLeft = 1;
-    }
-	
-	// 3. Using the lineExists function, test to see if the last (rightmost) lineSensor detects a line
-	// HINT: This part is very similar to 2a
-    if(/* TO DO */)
-    {
-      *foundRight = 1;
-    }
-
-	lineSensors.readLine(lineSensorValues);	// Read the values again
-
-	// 4. Using the lineExists function, test to see if any of the middle 3 Sensors detects a line
-	// HINT: this part is very similar to 2a
-	if(/* TO DO */)
-	{
-		*foundStraight = 1;
-	}
 }
 /*------------------------------------ END FUNCTIONS TO FILL IN ------------------------------------*/
 
@@ -267,4 +210,58 @@ void turn(char dir)
   }
 }
 
+void driveToIntersectionCenter(bool * foundLeft, bool * foundStraight, bool * foundRight)
+{
+  *foundLeft = 0;
+  *foundStraight = 0;
+  *foundRight = 0;
+
+  // Check for left and right exits again
+  lineSensors.readLine(lineSensorValues);
+  if(lineExists(0))
+    foundLeft = 1;
+  if(lineExists(5))
+    foundRight = 1;
+
+
+   // Drive straight a bit more, until we are
+        // approximately in the middle of intersection.
+        // This should help us better detect if we
+        // have left or right segments.
+        motors.setSpeeds(forwardSpeed, forwardSpeed);
+        delay(overshoot(lineThickness)/2);
+
+        lineSensors.readLine(lineSensorValues);
+
+        // Check for left and right exits.
+        if(lineExists(0))
+           foundLeft = 1;
+         if(lineExists(5))
+             foundRight = 1;
+
+
+        // After driving a little further, we
+        // should have passed the intersection
+        // and can check to see if we've hit the
+        // finish line or if there is a straight segment
+        // ahead.
+        delay(overshoot(lineThickness)/2);
+        
+        lineSensors.readLine(lineSensorValues);
+
+        // Check for left and right exits.
+        if(lineExists(0))
+           foundLeft = 1;
+         if(lineExists(5))
+             foundRight = 1;
+
+
+        if(lineExists(1) || lineExists(2) || lineExists(3) || lineExists(4))
+            foundStraight = 1;
+}
+
+int overshoot(int line_thickness)
+{
+  return (inches_to_zunits*(line_thickness))/forwardSpeed;
+}
 /*------------------------------------ GIVEN FUNCTIONS - DO NOT CHANGE ------------------------------------*/
