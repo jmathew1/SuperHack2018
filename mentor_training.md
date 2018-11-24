@@ -1,5 +1,5 @@
 # Mentor Training Day
-This document contains the tasks required to complete on the mentor training day. 
+This document contains the tasks required to complete on the mentor training day. As a reminder, you are to solve these challenges WITHOUT referring to any examples in the Arduino IDE, or online. You are encouraged to read through the zumo library and read some of the functions for each of the zumo classes (motors, buzzers, line sensors) to help you solve them. 
 The zumo library can be found at https://pololu.github.io/zumo-shield-arduino-library/.
 
 ## Part 1: Basic Programs
