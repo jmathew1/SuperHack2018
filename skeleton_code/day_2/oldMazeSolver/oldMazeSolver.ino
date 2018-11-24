@@ -67,7 +67,12 @@ void updateMotorSpeeds()
 	
     // 4b. Set lastError = error
 
-    // 5. Calculate the left and right motor speeds INDIVIDUALLY, using your new speedDifference variable. You will need to add or subtract this variable to the robot's normal forward speed (defined at the start of the program). Whether you add or subtract depends on which motor and is up to you to figure it out. The serial monitor can help here. 
+    // 5. Calculate the values for the left and right motor speeds, using your new speedDifference variable. 
+	// You will need to add or subtract speedDifference to the robot's normal forward speed (defined at the start of the program).
+	// HINT: Whether you add or subtract depends the motor, and how you defined your 'error' variable. It is up to you to figure it out. 
+	// Try drawing a diagram of the robot in two scenarios: left of the centre of the line, and right of the centre. 
+	// Would you get a positive or negative reading for speedDifference? If you're left of the line, which motor do you want to move forwards and which one do you want to move backwards?
+	// This should help you figure out whether to add or subtract for each motor
 
     // 6. Since we don't want the robot to go over the normal forward speed, use the in-built arduino 'constrain(1, 2, 3)' function to constrain the new left and right speeds between 0 and the forward speed.
 	// The function takes 3 arguments: the variable you want to constrain, the lower bound to constrain and finally the upper bound to constrain.
