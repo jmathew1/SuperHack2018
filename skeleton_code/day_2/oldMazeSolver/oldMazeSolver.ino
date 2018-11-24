@@ -277,4 +277,3 @@ int overshoot(int line_thickness)
 {
   return (inches_to_zunits*(line_thickness))/forwardSpeed;
 }
-/*------------------------------------ GIVEN FUNCTIONS - DO NOT CHANGE ------------------------------------*/
