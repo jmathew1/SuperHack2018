@@ -21,8 +21,8 @@ Note for this part you will need to use the pinMode and digitalWrite functions, 
 
 ### Line Sensors
 By looking underneath the robot, you will be able to see that there are 6 sensors at the front. These are used to detect black lines and are an important part of the main design challenge.
-For this part, you will need to set up a few things before you can start. First, set up an array of length 6. This array will store the values of the individual line sensors, after reading them.
-In your arduino setup, you will need to initialize the line sensors using the init() method in your line sensor object.  
+For this part, you will need to set up a few things before you can start. First, set up a global variable array of length 6. This array will store the values of the individual line sensors, after reading them.
+In your arduino setup, you will need to initialize the line sensors using the init() method in your line sensor object (no arguments).  
 The function readLine() is the main function you will be using for this whole part. It takes your line sensor array as an argument, and updates all the individual values of the sensors.
 You can find more details about the line sensors under ZumoReflectanceSensorArray in the main library above. 
 
@@ -31,9 +31,13 @@ You can find more details about the line sensors under ZumoReflectanceSensorArra
 3. Drive the robot forwards and make it stop when it sees a black piece of tape in front of it
 
 ### Buzzer
-1. Modify the above code to play a sound when it reaches a line
+1. Modify the above code to play a sound when it reaches a line. For this part it would help to read the ZumoBuzzer class description in the library
+2. Read through and run ZumoBuzzerExample under File > Examples > ZumoShield
 
 ## Part 2: Design Challenge
-For each part, download and write your code in the the provided skeleton code in this repository under skeleton_code > day_2 > oldMazeSolver.
+For this part, download and write your code in the the provided skeleton code in this repository under skeleton_code > day_2 > oldMazeSolver.
 
-### Some notes about the challenge
+Task 0: Decide on a normal operating speed of the robot and fill in the variable. You may need to play around with this value.
+Task 1: Fill in the updateMotorSpeeds() function
+Task 2a: Fill in the deadEnd() and intersection() functions
+Task 2b: Fill in the driveToIntersectionCenter function
