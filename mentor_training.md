@@ -12,7 +12,8 @@ The **zumo library reference** can be found at https://pololu.github.io/zumo-shi
 For each part, download and write your code in the the provided skeleton code in this repository under skeleton_code > day_1.
 
 ### Push Button and LED
-1. Wait for the button to be pressed, then blink the LED repetedly. You may like to use the waitForButton() method in your Pushbutton object.
+1. Wait for the button to be pressed, then blink the LED repetedly. 
+You may like to use the waitForButton() method in your Pushbutton object. The button can be found at the back of the robot, to the right of the on/off switch. The button to the left of the on/off switch on the left side of the robot is a **reset button.** You can use the reset button if you want to try your code again.
 Note for this part you will need to use the pinMode and digitalWrite functions for the LED to turn it off and on, with the LED pin being 13. 
 
 ### Motor Control
@@ -38,19 +39,23 @@ You may ignore the warnings when compiling and you might like to add a delay bet
 
 ### Line Sensors 2
 Normally, the line sensors are calibrated properly before being used, rather than just getting the raw values as we did above. If you open the ZumoReflectanceSensorArray Class Reference on the zumo library reference website and scroll down to Detailed Description > Calibration, you will see that it is better to expose your robot to a 'calibration phase' before using the line sensors. Instead of holding the robot and moving it across the tape, we will do it by sweeping the motors and calibrating.
-1. In the line sensors 2 skeleton code, you will find the provided calibration code. Have a read through it, then use the serial monitor to see the values you get on the line sensors, exactly as you did in the previous part. You will still need to initialize the sensors and create the global variable to hold your sensor values when reading them. Since the robot is calibrated, we can use the readLine() method instead, rather than just read(). It takes the same array as an argument. To test, place your zumo in the middle of some black tape while it performs calibration.
-2. readLine() is important for line following applications, as it **returns an integer** that tells you where it thinks the line is. For this part, print in the serial monitor **the output** of readLine(). After the robot performs calibration, place the robot in the centre of a strip of black tape, then open the serial monitor and see what happens as you slowly slide the robot from left to right. This shows how readLine() can be useful in figuring out our position relative to the centre of the black line.
+1. In the line sensors 2 skeleton code, you will find the provided calibration code. Have a read through it, then use the serial monitor to see the values you get on the line sensors, exactly as you did in the previous part. You will still need to initialize the sensors and create the global variable to hold your sensor values when reading them. Since the robot is calibrated, we can use the readLine() method instead, rather than just read(). It takes the same array as an argument. To test, place your zumo in the middle of some black tape while it performs calibration. What do you notice about the values this time, compared to the previous part?
+2. readLine() is important for line following applications, as it **returns an integer** that tells you where it thinks the line is. For this part, print in the serial monitor ***the output*** of readLine(). Place the robot on the center of a line of black tape and after the robot performs calibration, open the serial monitor and see what happens as you slowly shift the robot from left to right. This shows how readLine() can be useful in figuring out our position relative to the centre of the black line.
 
 ### Buzzer
 1. Modify the above code to play a sound when it reaches a line. For this part it would help to read the ZumoBuzzer class description in the library
 2. Read through and run ZumoBuzzerExample under File > Examples > ZumoShield
 
 ## Part 2: Design Challenge
-For this part, download and write your code in the the provided skeleton code in this repository under skeleton_code > day_2 > oldMazeSolver.
+For this part, download and write your code in the the provided skeleton code in this repository under skeleton_code > day_2 > oldMazeSolver. 
 
-Task 0: Decide on a normal operating speed of the robot and fill in the variable. You may need to play around with this value.
+**Please read through each part carefully for details**
+Task 0: Robot operating speed
+Decide on a normal operating speed of the robot and fill in the variable at the start of the code. You may need to play around with this value.
+Also read through the setup() and loop() functions. You do not have to look through the function descriptions (yet), but make sure you understand the general idea of what is happening every loop iteration.
+
 Task 1: Fill in the updateMotorSpeeds() function
+You will find this below the main loop() function, and has guided steps for what you need to do. **If you wish to test this part in isolation before you move on, you can comment out the rest of the code in loop(), or copy your code (AND THE CALIBRATION IN SETUP, PLUS THE CALIBRATION FUNCTION) to another arduino file**
 
-#### Time Permitting
 Task 2a: Fill in the deadEnd() and intersection() functions
-Task 2b: Fill in the driveToIntersectionCenter() function
+Using the function below updateMotorSpeeds(), figure out what values to check and return for these two functions. You might like to think back to the line sensors example for this part if you're stuck. 
