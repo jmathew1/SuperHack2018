@@ -62,8 +62,10 @@ void updateMotorSpeeds()
 
 	// 3. Create a new variable called errorChange. This variable will store the difference between the current error and the last error. For now, you can call the last error variable 'lastError', as we will be defining it later. 
 
-    // 4. Create a new variable called speedDifference. The value of speedDifference will be 'error', multiplyed by a number between 0 and 1, added to the change in error variable 'errorChange', but scaled by a number between 1 and 10.
+    // 4a. Create a new variable called speedDifference. The value of speedDifference will be 'error', multiplyed by a number between 0 and 1, added to the change in error variable 'errorChange', but scaled by a number between 1 and 10.
 	// This will determine how much your robot reacts to the error. You might like to play around with different values. 
+	
+    // 4b. Set lastError = error
 
     // 5. Calculate the left and right motor speeds INDIVIDUALLY, using your new speedDifference variable. You will need to add or subtract this variable to the robot's normal forward speed (defined at the start of the program). Whether you add or subtract depends on which motor and is up to you to figure it out. The serial monitor can help here. 
 
