@@ -5,7 +5,7 @@ The zumo library can be found at https://pololu.github.io/zumo-shield-arduino-li
 ## Part 1: Basic Programs
 For each part, download and write your code in the the provided skeleton code in this repository under skeleton_code > day_1.
 
-### Push Button
+### Push Button and LED
 1. Wait for the button to be pressed, then blink the LED while the button is being held down.
 Note for this part you will need to use the pinMode and digitalWrite functions, with the LED pin being 13. 
 
