@@ -5,7 +5,7 @@ If you haven't already, **download the Arduino IDE** at https://www.arduino.cc/e
 
 If you haven't already, **download the zumo library** by opening the Arduino IDE and going to Sketch > Include Library > Manage Libraries then searching for **'ZumoShield'** and downloading it. 
 
-The **zumo library reference** can be found at https://pololu.github.io/zumo-shield-arduino-library/ for your convenience and reading.
+The **zumo library reference** can be found at https://pololu.github.io/zumo-shield-arduino-library/ for your convenience and reading. You might want to keep this open while you complete the challenges.
 
 
 ## Part 1: Basic Programs
