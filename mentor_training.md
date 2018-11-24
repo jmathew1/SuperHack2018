@@ -53,4 +53,3 @@ Task 1: Fill in the updateMotorSpeeds() function
 
 #### Time Permitting
 Task 2a: Fill in the deadEnd() and intersection() functions
-Task 2b: Fill in the driveToIntersectionCenter function
