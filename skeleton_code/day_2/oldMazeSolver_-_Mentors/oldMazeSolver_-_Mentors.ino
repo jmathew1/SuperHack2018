@@ -132,11 +132,11 @@ void calibrateSensors()
   {
     if (i > 30 && i <= 90)
     {
-      motors.setSpeeds(-200, 200);
+      motors.setSpeeds(-150, 150);
     }
     else
     {
-      motors.setSpeeds(200, -200);
+      motors.setSpeeds(150, -150);
     }
 
     lineSensors.calibrate();
@@ -180,7 +180,7 @@ void turn(char dir)
     case 'L':
   case 'B':
       // Turn left.
-      motors.setSpeeds(-forwardSpeed, forwardSpeed);
+      motors.setSpeeds(forwardSpeed, -forwardSpeed);
 
       // This while loop monitors line position
       // until the turn is complete.
@@ -200,7 +200,7 @@ void turn(char dir)
 
     case 'R':
       // Turn right.
-      motors.setSpeeds(forwardSpeed, -forwardSpeed);
+      motors.setSpeeds(-forwardSpeed, forwardSpeed);
 
       // This while loop monitors line position
       // until the turn is complete.
