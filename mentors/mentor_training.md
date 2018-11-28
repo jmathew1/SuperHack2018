@@ -9,7 +9,7 @@ The **zumo library reference** can be found at https://pololu.github.io/zumo-shi
 
 
 ## Part 1: Basic Programs
-For each part, download and write your code in the the provided skeleton code in this repository under skeleton_code > day_1.
+For each part, download and write your code in the the provided skeleton code in this repository under skeleton_code - part 1
 
 ### Push Button and LED
 1. Wait for the button to be pressed, then blink the LED repetedly. 
@@ -47,7 +47,7 @@ Normally, the line sensors are calibrated properly before being used, rather tha
 2. Read through and run ZumoBuzzerExample under File > Examples > ZumoShield
 
 ## Part 2: Design Challenge
-For this part, download and write your code in the the provided skeleton code in this repository under skeleton_code > day_2 > oldMazeSolver. 
+For this part, download and write your code in the the provided skeleton code in this repository under skeleton_code - part 2: oldMazeSolver. 
 
 **Please read through each part carefully for details**
 
