@@ -1,8 +1,8 @@
 #include <Wire.h>
-#include <ZumoShield.h>
+#include <Zumo32U4.h>
 
-ZumoMotors motors;
-Pushbutton button(ZUMO_BUTTON);
+Zumo32U4Motors motors;
+Zumo32U4ButtonA buttonA;
 
 void setup()
 {
@@ -17,6 +17,4 @@ void setup()
 void loop()
 {
   /** TASK I **/
-
-  /** TASK II **/
 }

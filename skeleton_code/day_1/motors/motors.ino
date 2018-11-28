@@ -1,13 +1,13 @@
 #include <Wire.h>
-#include <ZumoShield.h>
+#include <Zumo32U4.h>
 
-ZumoMotors motors;
-Pushbutton button(ZUMO_BUTTON);
+Zumo32U4Motors motors;
+Zumo32U4ButtonA buttonA;
 
 void setup()
 {
   // Wait for the user to press the button
-  button.waitForButton();
+  buttonA.waitForButton();
 
   // Delay so that the robot does not move away while the user is
   // still touching it.
@@ -16,8 +16,9 @@ void setup()
 
 void loop() 
 {
-  /* TASK 1 */
+  /* TASK I */
 
+  /* TASK II */
 
-  /* TASK 2-4 */
+  /* TASK III */
 }

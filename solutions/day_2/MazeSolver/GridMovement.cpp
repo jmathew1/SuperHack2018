@@ -32,12 +32,12 @@ bool aboveDarkSpot()
 
 bool deadEnd()
 {
-	return !aboveLine(0) && !aboveLine(1) && !aboveLine(2) && !aboveLine(3) && !aboveLine(4)
+	return !aboveLine(0) && !aboveLine(1) && !aboveLine(2) && !aboveLine(3) && !aboveLine(4);
 }
 
 bool intersection()
 {
-	return aboveLine(0) || aboveLine(4)
+	return aboveLine(0) || aboveLine(4);
 }
 
 // Turns according to the parameter dir, which should be 'L'
@@ -106,15 +106,6 @@ void turn(char dir)
   }
 }
 
-// This should be called after followSegment to drive to the
-// center of an intersection.
-void driveToIntersectionCenter()
-{
-  // Drive to the center of the intersection.
-  motors.setSpeeds(straightSpeed, straightSpeed);
-  delay(intersectionDelay);
-}
-
 void driveToIntersectionCenter(bool * foundLeft, bool * foundStraight, bool * foundRight)
 {
   *foundLeft = 0;
@@ -129,6 +120,7 @@ void driveToIntersectionCenter(bool * foundLeft, bool * foundStraight, bool * fo
   // it for our loop timing.  A more robust approach would be
   // to use millis() for timing.
   motors.setSpeeds(straightSpeed, straightSpeed);
+  delay(100);
   for(uint16_t i = 0; i < intersectionDelay / 2; i++)
   {
     readSensors();
@@ -152,24 +144,6 @@ void driveToIntersectionCenter(bool * foundLeft, bool * foundStraight, bool * fo
 }
 
 /* ======================= CALIBRATION =======================*/
-void gridMovementSetup()
-{
-  // Configure the pins used for the line sensors.
-  lineSensors.initFiveSensors();
-
-  // Set up custom characters on the LCD so we can show a bar
-  // graph of the sensor readings after calibration.
-  loadCustomCharacters();
-
-  // Calibrate the gyro and show readings from it until the user
-  // presses button A.
-  turnSensorSetup();
-
-  // Calibrate the sensors by turning left and right, and show
-  // readings from it until the user presses A again.
-  lineSensorSetup();
-}
-
 // Calibrates the line sensors by turning left and right, then
 // displays a bar graph of calibrated sensor readings on the LCD.
 // Returns after the user presses A.
@@ -247,5 +221,19 @@ static void loadCustomCharacters()
   lcd.loadCustomCharacter(levels + 4, 4);  // 5 bars
   lcd.loadCustomCharacter(levels + 5, 5);  // 6 bars
   lcd.loadCustomCharacter(levels + 6, 6);  // 7 bars
+}
+
+void gridMovementSetup()
+{
+  // Configure the pins used for the line sensors.
+  lineSensors.initFiveSensors();
+
+  // Calibrate the gyro and show readings from it until the user
+  // presses button A.
+  turnSensorSetup();
+
+  // Calibrate the sensors by turning left and right, and show
+  // readings from it until the user presses A again.
+  lineSensorSetup();
 }
 /* ======================= CALIBRATION =======================*/

@@ -58,10 +58,10 @@ bool aboveLineDark(uint8_t sensorIndex);
 bool aboveDarkSpot();
 extern uint16_t lineSensorValues[numSensors];
 void turn(char dir);
-void followSegment();
-void driveToIntersectionCenter();
 void driveToIntersectionCenter(bool * foundLeft, bool * foundStraight, bool * foundRight);
 void gridMovementSetup();
+bool deadEnd();
+bool intersection();
 
 // These must be defined by the sketch:
 extern L3G gyro;

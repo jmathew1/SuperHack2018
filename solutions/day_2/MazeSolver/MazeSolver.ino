@@ -28,8 +28,7 @@ Zumo32U4Motors motors;
 Zumo32U4LineSensors lineSensors;
 L3G gyro;
 
-// Task 0: choose a driving speed for the robot, from 0 to 400. You may need to change this  as you compelte tasks
-int straightSpeed = 200;
+int lasterror = 0;
 
 void setup()
 {
@@ -46,19 +45,19 @@ void loop()
 	// While driving, check for any dead ends or interesections
     if(deadEnd() || intersection())
     {
-		// Drive stright forward to get to the center of the
-		// intersection and check for exits to the left, right, and
-		// straight ahead.
-		bool foundLeft, foundStraight, foundRight;
-		driveToIntersectionCenter(&foundLeft, &foundStraight, &foundRight);
-
-		/* IR CODE HERE */
-
-		// Choose a direction to turn.
-		char dir = selectTurn(foundLeft, foundStraight, foundRight);
-
-		// Make the turn.
-		turn(dir);
+  		// Drive stright forward to get to the center of the
+  		// intersection and check for exits to the left, right, and
+  		// straight ahead.
+  		bool foundLeft, foundStraight, foundRight;
+  		driveToIntersectionCenter(&foundLeft, &foundStraight, &foundRight);
+  
+  		/* IR CODE HERE */
+  
+  		// Choose a direction to turn.
+  		char dir = selectTurn(foundLeft, foundStraight, foundRight);
+  
+  		// Make the turn.
+  		turn(dir);
     }
 }
 
@@ -86,11 +85,13 @@ void updateMotorSpeeds()
     int error = position - 2000;
 
     // Take a proportion of the error
-    int speedDifference = error / 4;
+    int speedDifference = error / 4 + 6*(error - lasterror);
 
     // Get individual motor speeds.
     int leftSpeed = straightSpeed + speedDifference;
     int rightSpeed = straightSpeed - speedDifference;
+
+    lasterror = error;
 
     // Constrain our motor speeds to be between 0 and straightSpeed.
     leftSpeed = constrain(leftSpeed, 0, straightSpeed);
