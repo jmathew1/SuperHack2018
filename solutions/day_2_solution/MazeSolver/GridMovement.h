@@ -19,6 +19,7 @@ voltage. */
 #include <Wire.h>
 #include <Zumo32U4.h>
 
+
 // Motor speed when driving straight.  400 is the max speed.
 const uint16_t straightSpeed = 200;
 
@@ -58,10 +59,14 @@ bool aboveLineDark(uint8_t sensorIndex);
 bool aboveDarkSpot();
 extern uint16_t lineSensorValues[numSensors];
 void turn(char dir);
+void followSegment();
+void driveToIntersectionCenter();
 void driveToIntersectionCenter(bool * foundLeft, bool * foundStraight, bool * foundRight);
 void gridMovementSetup();
 bool deadEnd();
 bool intersection();
+int scanLeft();
+int scanRight();
 
 // These must be defined by the sketch:
 extern L3G gyro;
@@ -69,3 +74,5 @@ extern Zumo32U4ButtonA buttonA;
 extern Zumo32U4Motors motors;
 extern Zumo32U4LCD lcd;
 extern Zumo32U4LineSensors lineSensors;
+extern Zumo32U4ProximitySensors proxSensors;
+extern Zumo32U4Buzzer buzzer;
