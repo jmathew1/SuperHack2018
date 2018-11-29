@@ -6,7 +6,7 @@ Zumo32U4Motors motors;
 Zumo32U4ButtonA buttonA;
 
 void setup() 
-{
+{ 
   // Wait for the user to press button A.
   buttonA.waitForButton();
 
@@ -17,7 +17,18 @@ void setup()
 
 void loop() 
 {
-  /* TASK 1 */
-  
+  /* TASK 1
+  lcd.print("hello");
+  lcd.gotoXY(0, 1);
+  lcd.print(5);
+  lcd.clear()
+  */
+
   /* TASK 2 */
-} 
+  for (int i = 0; i <= 400; i++)
+  {
+    motors.setSpeeds(i, i);
+    lcd.print(i);
+  }
+  
+}
