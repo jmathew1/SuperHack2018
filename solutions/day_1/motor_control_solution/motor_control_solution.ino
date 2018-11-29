@@ -4,16 +4,12 @@
 Zumo32U4Motors motors;
 Zumo32U4ButtonA buttonA;
 
-#define SPEED_LIMIT 100
+int forward_speed = 200;
 
 int current_speed;
 
 void setup()
 {
-  // Uncomment if necessary to correct motor directions:
-  //motors.flipLeftMotor(true);
-  //motors.flipRightMotor(true);
-
   // Wait for the user to press button A.
   buttonA.waitForButton();
 
@@ -25,7 +21,7 @@ void setup()
 void loop() 
 {
   /** TASK I **/
-  motors.setSpeeds(SPEED_LIMIT, SPEED_LIMIT);
+  motors.setSpeeds(forward_speed, forward_speed);
 
   /** TASK II-IV **/
   for (current_speed = 0; current_speed <= 400; current_speed++)

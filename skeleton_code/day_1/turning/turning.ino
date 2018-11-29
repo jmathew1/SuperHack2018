@@ -7,7 +7,7 @@ Zumo32U4ButtonA buttonA;
 void setup()
 {
   // Wait for the user to press button A.
-  button.waitForButton();
+  buttonA.waitForButton();
 
   // Delay so that the robot does not move away while the user is
   // still touching it.
@@ -17,4 +17,6 @@ void setup()
 void loop()
 {
   /** TASK I **/
+
+  /** TASK II **/
 }

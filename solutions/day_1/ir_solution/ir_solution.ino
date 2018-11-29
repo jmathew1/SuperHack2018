@@ -1,73 +1,71 @@
+/* IR Proximity Sensor to scan for an object */
+
 #include <Wire.h>
 #include <Zumo32U4.h>
 
 Zumo32U4LCD lcd;
 Zumo32U4Motors motors;
 Zumo32U4ProximitySensors proxSensors;
+Zumo32U4ButtonA buttonA;
 
-#define SPEED         100;
-#define MIN_DISTANCE  1000; 
-#define TURN_TIME     100;
+/* USEFUL METHODS:
+ *  <sensor>.initFrontSensor(); - Configures this object to use just the front proximity sensors (front left and front right) 
+ *  <sensor>.initThreeSensor(); - Configures this object to use all three proximity sensors (front, left and right)
+ *  <sensor>.read(); - Makes the sensors emit IR pulses and get readings from the sensors
+ *  <sensor>.countsFrontWithLeftLeds(); 
+ *  <sensor>.countsFrontWithRightLeds(); 
+ */
 
-int front_left = 0;
-int front_right = 0;
+const int sensorThreshold = 6;
+const int speed = 250;
 
-void setup()
-{
+void setup() {
+  startMessage();
+  buttonA.waitForButton();
+
+  // Intialising proximity sensors
   proxSensors.initFrontSensor();
+
+
+  lcd.clear();
 }
 
-void loop() 
-{
+void loop() {
+  // Read the front proximity sensors
   proxSensors.read();
-  front_left = proxSensors.countsFrontWithLeftLeds();
-  front_right = proxSensors.countsFrontWithRightLeds();
-  
-  /* TASK I */
-  if (front_left < MIN_DISTANCE || front_right < MIN_DISTANCE)
-  {
-    motors.setSpeeds(SPEED, SPEED);
-  {
-  else
-  {
-    /* TASK I */
-    //motors.setSpeeds(0, 0);
-    /* TASK II */
-    move_around_object();
+
+  // Assigning front left and right proximity sensors to a variable - what do the values represent? - the brighter the LED is reflected back, the closer the object, hence, the higher value for a closer object
+  int leftSensor = proxSensors.countsFrontWithLeftLeds();     // Returns the number of brightness levels for the LEFT LEDs that activated the front proximity sensor
+  int rightSensor = proxSensors.countsFrontWithRightLeds();   // Returns the number of brightness levels for the RIGHT LEDs that activated the front proximity sensor.
+
+  // Print left and right sensor values onto the LCD
+  printLCD(leftSensor, rightSensor);
+
+  driveToObstacle(leftSensor, rightSensor);  
+
+}
+
+void driveToObstacle(int leftSensor, int rightSensor) {
+  motors.setSpeeds(speed, speed);
+  if (leftSensor >= sensorThreshold || rightSensor >= sensorThreshold) {
+    motors.setSpeeds(0, 0);
   }
-
 }
 
-void move_around_object()
-{
-   motors.setSpeeds(SPEED, -SPEED);  // Turn clockwise on the spot
-    delay(TURN_TIME);
-    motors.setSpeeds(0, 0); // Stop
-    delay(50);
-    motors.setSpeeds(SPEED/2, SPEED/2);   // Move forward slightly
-    delay(TURN_TIME);
-    motors.setSpeeds(0, 0); // Stop
-    delay(50);
-    motors.setSpeeds(-SPEED, SPEED);  // Face forward
-    delay(TURN_TIME);
-    motors.setSpeeds(0, 0); // Stop
-    delay(50);
-    motors.setSpeeds(SPEED/2, SPEED/2);   // Move forward slightly
-    delay(TURN_TIME);
-    motors.setSpeeds(0, 0); // Stop
-    delay(50);
-    motors.setSpeeds(SPEED, -SPEED);  // Turn anti-clockwise on the spot
-    delay(TURN_TIME);
-    motors.setSpeeds(0, 0); // Stop
-    delay(50);
-    motors.setSpeeds(SPEED/2, SPEED/2);   // Move forward slightly
-    delay(TURN_TIME);
-    motors.setSpeeds(0, 0); // Stop
-    delay(50);
-    motors.setSpeeds(SPEED, -SPEED);  // Face forward
-    delay(TURN_TIME);
-    motors.setSpeeds(0, 0); // Stop
-    delay(50);
-    motors.setSpeeds(SPEED, SPEED);  // Continue moving
+void printLCD(int leftSensor, int rightSensor) {
+  lcd.clear();
+  lcd.gotoXY(0,0);
+  lcd.print("L: ");
+  lcd.print(leftSensor);
+  lcd.gotoXY(0,1);
+  lcd.print("R: ");
+  lcd.print(rightSensor);  
 }
+
+void startMessage() {
+  lcd.clear();
+  lcd.print("Press A");
+  lcd.gotoXY(0,1);
+  lcd.print("to begin!");
 }
+

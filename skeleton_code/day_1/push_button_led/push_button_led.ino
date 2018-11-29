@@ -12,7 +12,7 @@ void setup()
 
 void loop() 
 {
-  /* TASK I-II */
+  /* TASK 1 */
 
-  /* TASK III */
+  /* TASK 2 */
 }
