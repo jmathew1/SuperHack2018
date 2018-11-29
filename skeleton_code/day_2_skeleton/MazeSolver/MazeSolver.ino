@@ -19,7 +19,7 @@ int maxRightValue;
 // Task 0: Choose a driving speed for the robot, from 0 to 400. You may need to change this as you complete tasks
 int forwardSpeed = /* TO DO */;
 
-// Task 3: Choose a proximity sensors threshold for civilian detection, from 1 to 6. 
+// Task 3: Choose a proximity sensors threshold for civilian detection 
 int proxSensorThreshold = /* TO DO */;
 /*--------------- CONSTANTS FOR OPERATION ---------------*/
 
@@ -50,7 +50,6 @@ void loop()
 
         // After rescuing the civilian, stop the robot and wait for a button push to restart
         motors.setSpeeds(0,0);
-        buzzer.playFrequency(440, 200, 15);
         buttonA.waitForButton(); 
       }
     }
