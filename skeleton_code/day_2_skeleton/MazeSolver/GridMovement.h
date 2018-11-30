@@ -19,6 +19,10 @@ voltage. */
 #include <Wire.h>
 #include <Zumo32U4.h>
 
+
+// Motor speed when driving straight.  400 is the max speed.
+const uint16_t straightSpeed = 200;
+
 // The delay to use between first detecting an intersection and
 // starting to turn.  During this time, the robot drives
 // straight.  Ideally this delay would be just long enough to get
@@ -59,6 +63,10 @@ void followSegment();
 void driveToIntersectionCenter();
 void driveToIntersectionCenter(bool * foundLeft, bool * foundStraight, bool * foundRight);
 void gridMovementSetup();
+bool deadEnd();
+bool intersection();
+int scanLeft();
+int scanRight();
 
 // These must be defined by the sketch:
 extern L3G gyro;
@@ -66,3 +74,5 @@ extern Zumo32U4ButtonA buttonA;
 extern Zumo32U4Motors motors;
 extern Zumo32U4LCD lcd;
 extern Zumo32U4LineSensors lineSensors;
+extern Zumo32U4ProximitySensors proxSensors;
+extern Zumo32U4Buzzer buzzer;

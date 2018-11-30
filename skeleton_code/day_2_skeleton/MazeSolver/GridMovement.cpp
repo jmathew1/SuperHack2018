@@ -5,17 +5,13 @@ GridMovement.h. */
 #include "TurnSensor.h"
 #include "GridMovement.h"
 
+uint16_t lineSensorValues[numSensors];
+
 void printBar(uint8_t height)
 {
   if (height > 8) { height = 8; }
   const char barChars[] = {' ', 0, 1, 2, 3, 4, 5, 6, 255};
   lcd.print(barChars[height]);
-}
-
-// Returns true if the sensor is seeing a line.
-bool aboveLine(uint8_t sensorIndex)
-{
-  return lineSensorValues[sensorIndex] > sensorThreshold;
 }
 
 // Returns true if the sensor is seeing a lot of darkness.
@@ -36,12 +32,12 @@ bool aboveDarkSpot()
 
 bool deadEnd()
 {
-	return !aboveLine(0) && !aboveLine(1) && !aboveLine(2) && !aboveLine(3) && !aboveLine(4)
+  return !aboveLine(0) && !aboveLine(1) && !aboveLine(2) && !aboveLine(3) && !aboveLine(4);
 }
 
 bool intersection()
 {
-	return aboveLine(0) || aboveLine(4)
+  return aboveLine(0) || aboveLine(4);
 }
 
 // Turns according to the parameter dir, which should be 'L'
@@ -132,10 +128,12 @@ void driveToIntersectionCenter(bool * foundLeft, bool * foundStraight, bool * fo
   // readSensors() takes approximately 2 ms to run, so we use
   // it for our loop timing.  A more robust approach would be
   // to use millis() for timing.
+  int count = 0;
   motors.setSpeeds(straightSpeed, straightSpeed);
-  for(uint16_t i = 0; i < intersectionDelay / 2; i++)
+  while(aboveLine(0)||aboveLine(4)) // Keep moving foward till the line sensors no longer detect a line to either the left or right 
   {
     readSensors();
+    count +=1;
     if(aboveLine(0))
     {
       *foundLeft = 1;
@@ -146,6 +144,12 @@ void driveToIntersectionCenter(bool * foundLeft, bool * foundStraight, bool * fo
     }
   }
 
+  // Move forward an additional 2 line thicknesses so the robot is centered at the intersection
+  count = count*2;
+  while(count){
+    count -=1;
+    delay(2);
+  }
   readSensors();
 
   // Check for a straight exit.
@@ -156,24 +160,6 @@ void driveToIntersectionCenter(bool * foundLeft, bool * foundStraight, bool * fo
 }
 
 /* ======================= CALIBRATION =======================*/
-void gridMovementSetup()
-{
-  // Configure the pins used for the line sensors.
-  lineSensors.initFiveSensors();
-
-  // Set up custom characters on the LCD so we can show a bar
-  // graph of the sensor readings after calibration.
-  loadCustomCharacters();
-
-  // Calibrate the gyro and show readings from it until the user
-  // presses button A.
-  turnSensorSetup();
-
-  // Calibrate the sensors by turning left and right, and show
-  // readings from it until the user presses A again.
-  lineSensorSetup();
-}
-
 // Calibrates the line sensors by turning left and right, then
 // displays a bar graph of calibrated sensor readings on the LCD.
 // Returns after the user presses A.
@@ -235,6 +221,24 @@ static void lineSensorSetup()
   }
 
   lcd.clear();
+}
+
+void gridMovementSetup()
+{
+  // Configure the pins used for the line sensors.
+  lineSensors.initFiveSensors();
+
+  // Set up custom characters on the LCD so we can show a bar
+  // graph of the sensor readings after calibration.
+ // loadCustomCharacters();
+
+  // Calibrate the gyro and show readings from it until the user
+  // presses button A.
+  turnSensorSetup();
+
+  // Calibrate the sensors by turning left and right, and show
+  // readings from it until the user presses A again.
+  lineSensorSetup();
 }
 
 // Sets up special characters in the LCD so that we can display

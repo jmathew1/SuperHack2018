@@ -17,10 +17,10 @@ int maxRightValue;
 
 /*--------------- CONSTANTS FOR OPERATION ---------------*/
 // Task 0: Choose a driving speed for the robot, from 0 to 400. You may need to change this as you complete tasks
-int forwardSpeed = /* TO DO */;
+//int forwardSpeed = /* TO DO */;
 
 // Task 3: Choose a proximity sensors threshold for civilian detection 
-int proxSensorThreshold = /* TO DO */;
+//int proxSensorThreshold = /* TO DO */;
 /*--------------- CONSTANTS FOR OPERATION ---------------*/
 
 void setup()
@@ -46,7 +46,7 @@ void loop()
     if(foundLeft&&foundRight&&!foundStraight){
   		if(civilianDetected())  // TASK 3a: FILL IN THIS FUNCTION
       {
-        rescueCivilian()      // Task 3b: FILL IN THIS FUNCTION
+        rescueCivilian();      // Task 3b: FILL IN THIS FUNCTION
 
         // After rescuing the civilian, stop the robot and wait for a button push to restart
         motors.setSpeeds(0,0);
