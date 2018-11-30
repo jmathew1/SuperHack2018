@@ -3,7 +3,6 @@ SuperHack is an engineering hackathon designed for young women in high school, r
 This repository is designed for the management team and contains:
 1. Solutions to the hackathon challenges
 2. Skeleton code for the hackathon challenges
-3. Information, examples and tasks for the mentors
-4. The formal hackathon challenge proposal
+3. Information, examples and tasks for the mentors for the training day. **Uses old Zumo robots**
 
 ***Created by Jacob Mathew, 2018***
